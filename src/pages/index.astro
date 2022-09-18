@@ -27,7 +27,9 @@ const { items, lastBuildDate } = await parser.parseURL(source);
             {items.map((item) => <Card item={item} />)}
         </ul>
         <code
-            ><span class="text-gradient"><a href={source}>Source</a></span>
+            ><span class="text-gradient"
+                ><a href={source} rel="prefetch" target="_blank">Source</a>
+            </span>
         </code>
     </main>
 </Layout>
