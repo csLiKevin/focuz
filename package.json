@@ -14,7 +14,6 @@
     },
     "dependencies": {
         "@astrojs/image": "^0.7.0",
-        "@astrojs/prefetch": "^0.0.7",
         "@astrojs/vercel": "^2.0.0",
         "astro": "^1.2.6",
         "rss-parser": "^3.12.0",
