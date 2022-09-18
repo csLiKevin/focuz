@@ -4,13 +4,15 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "astro": "astro",
     "build": "astro build",
+    "check": "astro check",
+    "dev": "astro dev",
     "preview": "astro preview",
-    "astro": "astro"
+    "start": "astro dev"
   },
   "dependencies": {
-    "astro": "^1.2.6"
+    "astro": "^1.2.6",
+    "rss-parser": "^3.12.0"
   }
 }

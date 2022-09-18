@@ -1,24 +1,27 @@
 ---
+import type { FeedItem } from '../env';
+
 export interface Props {
-	title: string;
-	body: string;
-	href: string;
+	item: FeedItem;
 }
 
-const { href, title, body } = Astro.props;
+const { item: {creator, contentSnippet, link, pubDate, title, "media:thumbnail": {$: {url: thumbnail}} = {$: {}}} } = Astro.props;
 ---
 
 <li class="link-card">
-	<a href={href}>
+	<a href={link}>
 		<h2>
 			{title}
 			<span>&rarr;</span>
 		</h2>
+		<p><b>{pubDate &&<>{new Date(pubDate).toLocaleString()} &#8226; </>}{creator}</b></p>
 		<p>
-			{body}
+			<img src={thumbnail} />
+			{contentSnippet}
 		</p>
 	</a>
 </li>
+
 <style>
 	:root {
 		--link-gradient: linear-gradient(45deg, #4f39fa, #da62c4 30%, var(--color-border) 60%);
@@ -44,6 +47,17 @@ const { href, title, body } = Astro.props;
 		color: var(--text-color);
 		background-color: white;
 		opacity: 0.8;
+	}
+
+	.link-card img {
+		float: left;
+		margin-right: 1ch;
+		border-radius: 0.5rem;
+	}
+
+	.link-card:is(:hover, :focus-within) img {
+		border: 0.25ch solid #4f39fa;
+		margin: -0.25ch 0.75ch -0.25ch -0.25ch;
 	}
 
 	h2 {
