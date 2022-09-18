@@ -1,5 +1,6 @@
 ---
 import type { FeedItem } from "../env";
+import { Image } from "@astrojs/image/components";
 
 export interface Props {
     item: FeedItem;
@@ -33,7 +34,18 @@ const {
             </b>
         </p>
         <p>
-            <img src={thumbnail} />
+            {
+                thumbnail && (
+                    <Image
+                        alt=""
+                        aspectRatio="1"
+                        format="webp"
+                        loading="lazy"
+                        src={thumbnail}
+                        width="128"
+                    />
+                )
+            }
             {contentSnippet}
         </p>
     </a>
