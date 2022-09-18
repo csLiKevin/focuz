@@ -4,13 +4,39 @@ import Card from "../components/Card.astro";
 import Parser from "rss-parser";
 import type { Feed } from "../env";
 
-const source = "https://feeds.feedburner.com/crunchyroll/animenews";
-const parser = new Parser<Feed>({
-    customFields: {
-        item: ["description", "media:thumbnail"],
-    },
-});
-const { items, lastBuildDate } = await parser.parseURL(source);
+function buildSource(url: string | number | undefined): string {
+    if (typeof url !== "string" || url.startsWith("/")) {
+        return Astro.url.href;
+    }
+    try {
+        return new URL(url).href;
+    } catch (_) {
+        return `${Astro.url.protocol}//${url}`;
+    }
+}
+
+async function parseFeed(url: string): Promise<Feed> {
+    const emptyFeed = {
+        items: [],
+        lastBuildDate: new Date().toString(),
+    };
+    const isLoop =
+        Astro.request.headers.get("user-agent")?.toLowerCase() === "rss-parser";
+    if (isLoop) {
+        return emptyFeed;
+    }
+
+    return await new Parser<Feed>({
+        customFields: {
+            item: ["description", "media:thumbnail"],
+        },
+    })
+        .parseURL(url)
+        .catch(() => emptyFeed);
+}
+
+const source = buildSource(Astro.params.feedUrl);
+const { items, lastBuildDate } = await parseFeed(source);
 ---
 
 <Layout title="RSS Reader">
@@ -26,6 +52,14 @@ const { items, lastBuildDate } = await parser.parseURL(source);
         <ul role="list" class="link-card-grid">
             {items.map((item) => <Card item={item} />)}
         </ul>
+        {
+            !items.length && (
+                <p class="instructions">
+                    Append a RSS feed url to the end of{" "}
+                    <code>{Astro.url.host}/</code> to start reading!
+                </p>
+            )
+        }
         <code
             ><span class="text-gradient"
                 ><a href={source} target="_blank">Source</a>
