@@ -38,8 +38,8 @@ const {
                 thumbnail && (
                     <Image
                         alt=""
-                        aspectRatio="1"
                         format="webp"
+                        height="128"
                         loading="lazy"
                         src={thumbnail}
                         width="128"
@@ -85,13 +85,13 @@ const {
 
     .link-card img {
         float: left;
-        margin-right: 1ch;
+        margin-right: 0.75rem;
         border-radius: 0.5rem;
     }
 
     .link-card:is(:hover, :focus-within) img {
-        border: 0.25ch solid #4f39fa;
-        margin: -0.25ch 0.75ch -0.25ch -0.25ch;
+        border: 0.15rem solid #4f39fa;
+        margin: -0.15rem 0.60rem -0.15rem -0.15rem;
     }
 
     h2 {
