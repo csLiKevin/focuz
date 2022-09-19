@@ -4,26 +4,31 @@ import Card from "../components/Card.astro";
 import Parser from "rss-parser";
 import type { Feed } from "../env";
 
-function buildSource(url: string | number | undefined): string {
-    if (typeof url !== "string" || url.startsWith("/")) {
-        return Astro.url.href;
-    }
-    try {
-        return new URL(url).href;
-    } catch (_) {
-        return `${Astro.url.protocol}//${url}`;
-    }
+const emptyFeed = {
+    items: [],
+    lastBuildDate: new Date().toString(),
+};
+
+function createErrorFeed(error: TypeError) {
+    return {
+        ...emptyFeed,
+        items: [
+            {
+                title: error.name,
+                contentSnippet: error.message,
+            },
+        ],
+    };
 }
 
 async function parseFeed(url: string): Promise<Feed> {
-    const emptyFeed = {
-        items: [],
-        lastBuildDate: new Date().toString(),
-    };
-    const isLoop =
-        Astro.request.headers.get("user-agent")?.toLowerCase() === "rss-parser";
-    if (isLoop) {
-        return emptyFeed;
+    try {
+        const { origin } = new URL(url);
+        if (origin === Astro.url.origin) {
+            return emptyFeed;
+        }
+    } catch (error: TypeError) {
+        return createErrorFeed(error);
     }
 
     return await new Parser<Feed>({
@@ -31,11 +36,13 @@ async function parseFeed(url: string): Promise<Feed> {
             item: ["description", "media:thumbnail"],
         },
     })
-        .parseURL(url)
-        .catch(() => emptyFeed);
+        .parseURL(new URL(url).toString())
+        .catch((error: TypeError) => {
+            return createErrorFeed(error);
+        });
 }
 
-const source = buildSource(Astro.params.feedUrl);
+const source = Astro.url.href.replace(`${Astro.url.origin}/`, "");
 const { items, lastBuildDate } = await parseFeed(source);
 ---
 
@@ -62,7 +69,7 @@ const { items, lastBuildDate } = await parseFeed(source);
         }
         <code
             ><span class="text-gradient"
-                ><a href={source} target="_blank">Source</a>
+                ><a href={source} target="_blank">{source}</a>
             </span>
         </code>
     </main>
@@ -122,6 +129,7 @@ const { items, lastBuildDate } = await parseFeed(source);
 
     .link-card-grid {
         display: grid;
+        grid-template-columns: 100%;
         gap: 1rem;
         padding: 0;
     }

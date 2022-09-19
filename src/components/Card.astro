@@ -8,7 +8,7 @@ export interface Props {
 
 const {
     item: {
-        creator,
+        author,
         contentSnippet,
         link,
         pubDate,
@@ -22,15 +22,12 @@ const {
     <a href={link} target="_blank">
         <h2>
             {title}
-            <span>&rarr;</span>
+            {link && <span>&rarr;</span>}
         </h2>
         <p>
             <b
-                >{
-                    pubDate && (
-                        <>{new Date(pubDate).toLocaleString()} &#8226; </>
-                    )
-                }{creator}
+                >{pubDate && new Date(pubDate).toLocaleString()}
+                {author && <>&#8226; {author}</>}
             </b>
         </p>
         <p>
@@ -91,7 +88,7 @@ const {
 
     .link-card:is(:hover, :focus-within) img {
         border: 0.15rem solid #4f39fa;
-        margin: -0.15rem 0.60rem -0.15rem -0.15rem;
+        margin: -0.15rem 0.6rem -0.15rem -0.15rem;
     }
 
     h2 {
