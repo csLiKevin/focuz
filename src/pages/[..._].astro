@@ -47,8 +47,10 @@ const { items, lastBuildDate } = await parseFeed(source);
 ---
 
 <Layout title="RSS Reader">
-    <main>
-        <h1><span class="text-gradient">RSS Reader</span></h1>
+    <main class="content">
+        <h1 class="title">
+            <span class="text-gradient">RSS Reader</span>
+        </h1>
         <p>
             <b
                 >Updated: {
@@ -56,12 +58,12 @@ const { items, lastBuildDate } = await parseFeed(source);
                 }
             </b>
         </p>
-        <ul role="list" class="link-card-grid">
+        <ul role="list" class="column">
             {items.map((item) => <Card item={item} />)}
         </ul>
         {
             !items.length && (
-                <p class="instructions">
+                <p class="help">
                     Append a RSS feed url to the end of{" "}
                     <code>{Astro.url.host}/</code> to start reading!
                 </p>
@@ -77,14 +79,19 @@ const { items, lastBuildDate } = await parseFeed(source);
 
 <style>
     :root {
-        --astro-gradient: linear-gradient(0deg, #4f39fa, #da62c4);
+        --astro-gradient: linear-gradient(
+            0deg,
+            var(--color-primary),
+            var(--color-secondary)
+        );
     }
 
-    h1 {
+    h1.title {
+        font-size: var(--font-size-xl);
         margin: 2rem 0;
     }
 
-    main {
+    main.content {
         margin: auto;
         padding: 1em;
         max-width: 80ch;
@@ -111,23 +118,23 @@ const { items, lastBuildDate } = await parseFeed(source);
         }
     }
 
-    .instructions {
+    .help {
         line-height: 1.6;
         margin: 1rem 0;
-        background: #4f39fa;
+        background: var(--color-primary);
         padding: 1rem;
         border-radius: 0.4rem;
         color: var(--color-bg);
     }
 
-    .instructions code {
+    .help code {
         font-size: 0.875em;
         border: 0.1em solid var(--color-border);
         border-radius: 4px;
         padding: 0.15em 0.25em;
     }
 
-    .link-card-grid {
+    .column {
         display: grid;
         grid-template-columns: 100%;
         gap: 1rem;

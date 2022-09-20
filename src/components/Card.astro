@@ -18,23 +18,24 @@ const {
 } = Astro.props;
 ---
 
-<li class="link-card">
-    <a href={link} target="_blank">
-        <h2>
+<li class="container">
+    <a class="link" href={link} target="_blank">
+        <h2 class="title">
             {title}
-            {link && <span>&rarr;</span>}
+            {link && <span class="arrow">&rarr;</span>}
         </h2>
-        <p>
+        <p class="section">
             <b
                 >{pubDate && new Date(pubDate).toLocaleString()}
                 {author && <>&#8226; {author}</>}
             </b>
         </p>
-        <p>
+        <p class="section">
             {
                 thumbnail && (
                     <Image
                         alt=""
+                        class="thumbnail"
                         format="webp"
                         height="128"
                         loading="lazy"
@@ -52,13 +53,13 @@ const {
     :root {
         --link-gradient: linear-gradient(
             45deg,
-            #4f39fa,
-            #da62c4 30%,
+            var(--color-primary),
+            var(--color-secondary) 30%,
             var(--color-border) 60%
         );
     }
 
-    .link-card {
+    .container {
         list-style: none;
         display: flex;
         padding: 0.15rem;
@@ -69,7 +70,7 @@ const {
         transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .link-card > a {
+    .container > a.link {
         width: 100%;
         text-decoration: none;
         line-height: 1.4;
@@ -80,41 +81,43 @@ const {
         opacity: 0.8;
     }
 
-    .link-card img {
-        float: left;
-        margin-right: 0.75rem;
-        border-radius: 0.5rem;
-    }
-
-    .link-card:is(:hover, :focus-within) img {
-        border: 0.15rem solid #4f39fa;
-        margin: -0.15rem 0.6rem -0.15rem -0.15rem;
-    }
-
-    h2 {
+    h2.title {
+        font-size: var(--font-size-lg);
         margin: 0;
         transition: color 0.6s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    p {
-        margin-top: 0.75rem;
-        margin-bottom: 0;
-    }
-
-    h2 span {
+    h2.title span.arrow {
         display: inline-block;
         transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .link-card:is(:hover, :focus-within) {
+    img.thumbnail {
+        float: left;
+        padding: 0.1rem;
+        margin-right: 0.75rem;
+        background-image: var(--link-gradient);
+        background-size: 400%;
+        border-radius: 0.5rem;
+        background-position: 100%;
+        transition: background-position 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    p.section {
+        margin-top: 0.75rem;
+        margin-bottom: 0;
+    }
+
+    .container:is(:hover, :focus-within),
+    .container:is(:hover, :focus-within) img.thumbnail {
         background-position: 0;
     }
 
-    .link-card:is(:hover, :focus-within) h2 {
-        color: #4f39fa;
+    .container:is(:hover, :focus-within) h2.title {
+        color: var(--color-primary);
     }
 
-    .link-card:is(:hover, :focus-within) h2 span {
+    .container:is(:hover, :focus-within) h2.title span.arrow {
         will-change: transform;
         transform: translateX(2px);
     }
