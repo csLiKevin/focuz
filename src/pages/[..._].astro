@@ -22,6 +22,10 @@ function createErrorFeed(error: TypeError) {
 }
 
 async function parseFeed(url: string): Promise<Feed> {
+    if (!url) {
+        return emptyFeed;
+    }
+
     try {
         const { origin } = new URL(url);
         if (origin === Astro.url.origin) {
