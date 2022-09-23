@@ -9,44 +9,51 @@ const emptyFeed = {
     lastBuildDate: new Date().toString(),
 };
 
-function createErrorFeed(error: TypeError) {
-    return {
-        ...emptyFeed,
-        items: [
-            {
-                title: error.name,
-                contentSnippet: error.message,
-            },
-        ],
-    };
+function getSourceURL() {
+    const url = Astro.url.href.replace(`${Astro.url.origin}/`, "");
+
+    try {
+        return new URL(url);
+    } catch (_) {}
+
+    try {
+        return new URL(`${Astro.url.protocol}//${url}`);
+    } catch (_) {}
+
+    return null;
 }
 
-async function parseFeed(url: string): Promise<Feed> {
+async function parseFeed(url: URL | null): Promise<Feed> {
     if (!url) {
         return emptyFeed;
     }
 
-    try {
-        const { origin } = new URL(url);
-        if (origin === Astro.url.origin) {
-            return emptyFeed;
-        }
-    } catch (error: TypeError) {
-        return createErrorFeed(error);
+    const { origin } = url;
+    if (origin === Astro.url.origin) {
+        return emptyFeed;
     }
 
-    return await new Parser<Feed>({
+    const parser = new Parser<Feed>({
         customFields: {
             item: ["description", "media:thumbnail"],
         },
-    })
-        .parseURL(new URL(url).toString())
-        .catch((error: TypeError) => {
-            return createErrorFeed(error);
-        });
+    });
+    try {
+        return parser.parseURL(new URL(url).toString());
+    } catch (error: TypeError) {
+        return {
+            ...emptyFeed,
+            items: [
+                {
+                    title: error.name,
+                    contentSnippet: error.message,
+                },
+            ],
+        };
+    }
 }
 
-const source = Astro.url.href.replace(`${Astro.url.origin}/`, "");
+const source = getSourceURL();
 const { items, lastBuildDate } = await parseFeed(source);
 ---
 
@@ -73,11 +80,17 @@ const { items, lastBuildDate } = await parseFeed(source);
                 </p>
             )
         }
-        <code
-            ><span class="text-gradient"
-                ><a href={source} target="_blank">{source}</a>
-            </span>
-        </code>
+        {
+            source && (
+                <code>
+                    <span class="text-gradient">
+                        <a href={source} target="_blank">
+                            {source}
+                        </a>
+                    </span>
+                </code>
+            )
+        }
     </main>
 </Layout>
 
