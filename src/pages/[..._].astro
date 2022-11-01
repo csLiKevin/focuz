@@ -13,6 +13,10 @@ const emptyFeed = {
 function getSourceURL() {
     const url = Astro.url.href.replace(`${Astro.url.origin}/`, "");
 
+    if (url.indexOf(".") === -1) {
+        return null;
+    }
+
     try {
         return new URL(url);
     } catch (_) {}
