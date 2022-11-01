@@ -1,9 +1,9 @@
 ---
-import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
-import Parser from "rss-parser";
-import type { Feed } from "../env";
 import { SITE_TITLE } from "../constants";
+import type { Feed } from "../env";
+import Layout from "../layouts/Layout.astro";
+import Parser from "rss-parser";
 
 const emptyFeed = {
     items: [],

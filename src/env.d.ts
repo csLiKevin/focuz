@@ -1,5 +1,4 @@
 /// <reference types="astro/client" />
-
 import type { Item, Output } from "rss-parser";
 
 type FeedItem = Item & {
