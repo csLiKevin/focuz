@@ -9,18 +9,18 @@
         "check": "astro check",
         "deploy": "vercel deploy",
         "dev": "astro dev",
-        "format": "prettier --tab-width 4 --write .",
+        "format": "prettier --ignore-path .gitignore --tab-width 4 --write .",
         "start": "astro dev"
     },
     "dependencies": {
-        "@astrojs/image": "^0.7.0",
-        "@astrojs/vercel": "^2.0.0",
-        "astro": "^1.2.3",
+        "@astrojs/image": "^0.11.0",
+        "@astrojs/vercel": "^2.3.3",
+        "astro": "^1.6.2",
         "rss-parser": "^3.12.0",
-        "vercel": "^28.3.0"
+        "vercel": "^28.4.12"
     },
     "devDependencies": {
         "prettier": "^2.7.1",
-        "prettier-plugin-astro": "^0.5.4"
+        "prettier-plugin-astro": "^0.7.0"
     }
 }
