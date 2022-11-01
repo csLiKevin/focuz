@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import Card from "../components/Card.astro";
 import Parser from "rss-parser";
 import type { Feed } from "../env";
+import { SITE_TITLE } from "../constants";
 
 const emptyFeed = {
     items: [],
@@ -54,32 +55,22 @@ async function parseFeed(url: URL | null): Promise<Feed> {
 }
 
 const source = getSourceURL();
-const { items, lastBuildDate } = await parseFeed(source);
+const { items, lastBuildDate, title } = await parseFeed(source);
 ---
 
-<Layout title="RSS Reader">
-    <main class="content">
-        <h1 class="title">
-            <span class="text-gradient">RSS Reader</span>
-        </h1>
-        <p>
-            <b
-                >Updated: {
-                    lastBuildDate && new Date(lastBuildDate).toLocaleString()
-                }
-            </b>
+<Layout title={SITE_TITLE}>
+    <main>
+        <h1>{title}</h1>
+        <p class="font-bold">
+            Updated: {lastBuildDate && new Date(lastBuildDate).toLocaleString()}
         </p>
-        <ul role="list" class="column">
-            {items.map((item) => <Card item={item} />)}
-        </ul>
+        {items.map((item) => <Card item={item} />)}
         {
-            source && (
+            Boolean(source) && (
                 <code>
-                    <span class="text-gradient">
-                        <a href={source} target="_blank">
-                            {source}
-                        </a>
-                    </span>
+                    <a href={source} target="_blank">
+                        {source}
+                    </a>
                 </code>
             )
         }

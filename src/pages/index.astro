@@ -1,15 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import { SITE_TITLE } from "../constants";
 ---
 
-<Layout title="RSS Reader">
-    <main class="content">
-        <h1 class="title">
-            <span class="text-gradient">RSS Reader</span>
-        </h1>
-        <p class="help">
-            Append a RSS feed url to the end of{" "}
-            <code>{Astro.url.host}/</code> to start reading!
-        </p>
-    </main>
+<Layout title={SITE_TITLE}>
+    <h1>{SITE_TITLE}</h1>
+    <p>
+        Append a RSS feed url to the end of <code>{Astro.url.host}/</code> to start
+        reading!
+    </p>
 </Layout>
