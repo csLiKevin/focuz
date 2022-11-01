@@ -73,14 +73,6 @@ const { items, lastBuildDate } = await parseFeed(source);
             {items.map((item) => <Card item={item} />)}
         </ul>
         {
-            !items.length && (
-                <p class="help">
-                    Append a RSS feed url to the end of{" "}
-                    <code>{Astro.url.host}/</code> to start reading!
-                </p>
-            )
-        }
-        {
             source && (
                 <code>
                     <span class="text-gradient">
@@ -93,68 +85,3 @@ const { items, lastBuildDate } = await parseFeed(source);
         }
     </main>
 </Layout>
-
-<style>
-    :root {
-        --astro-gradient: linear-gradient(
-            0deg,
-            var(--color-primary),
-            var(--color-secondary)
-        );
-    }
-
-    h1.title {
-        font-size: var(--font-size-xl);
-        margin: 2rem 0;
-    }
-
-    main.content {
-        margin: auto;
-        padding: 1em;
-        max-width: 80ch;
-    }
-
-    .text-gradient {
-        font-weight: 900;
-        background-image: var(--astro-gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-size: 100% 200%;
-        background-position-y: 100%;
-        border-radius: 0.4rem;
-        animation: pulse 4s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-        0%,
-        100% {
-            background-position-y: 0%;
-        }
-        50% {
-            background-position-y: 80%;
-        }
-    }
-
-    .help {
-        line-height: 1.6;
-        margin: 1rem 0;
-        background: var(--color-primary);
-        padding: 1rem;
-        border-radius: 0.4rem;
-        color: var(--color-bg);
-    }
-
-    .help code {
-        font-size: 0.875em;
-        border: 0.1em solid var(--color-border);
-        border-radius: 4px;
-        padding: 0.15em 0.25em;
-    }
-
-    .column {
-        display: grid;
-        grid-template-columns: 100%;
-        gap: 1rem;
-        padding: 0;
-    }
-</style>
