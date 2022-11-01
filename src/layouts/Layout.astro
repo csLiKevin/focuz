@@ -18,6 +18,11 @@ const { title } = Astro.props;
         <title>{title}</title>
     </head>
     <body>
+        <div
+            class="sticky top-0 prose px-6 py-4 bg-white max-w-none shadow opacity-75"
+        >
+            <a href="/" class="no-underline"><h1 class="m-0">{title}</h1></a>
+        </div>
         <main class="prose container mx-auto my-8">
             <slot />
         </main>
