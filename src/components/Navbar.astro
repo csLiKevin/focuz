@@ -1,0 +1,54 @@
+---
+export interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+const { origin } = Astro.url;
+---
+
+<div
+    class="sticky top-0 prose px-6 py-4 bg-white max-w-none shadow opacity-75 flex space-x-4"
+>
+    <h1 class="m-0">
+        <a href="/" class="no-underline text-black font-extrabold">{title}</a>
+    </h1>
+    <form
+        onsubmit="handleSubmit(event)"
+        class="javascript-required flex-1 mt-1"
+    >
+        <label class="relative block">
+            <span class="sr-only">Enter Url</span>
+            <span class="absolute inset-y-0 flex items-center pl-2">
+                <svg
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                >
+                    <path
+                        fill="currentColor"
+                        xmlns="http://www.w3.org/2000/svg"
+                        d="M10 4C6.68629 4 4 6.68629 4 10C4 13.3137 6.68629 16 10 16C13.3137 16 16 13.3137 16 10C16 6.68629 13.3137 4 10 4ZM2 10C2 5.58172 5.58172 2 10 2C14.4183 2 18 5.58172 18 10C18 11.8487 17.3729 13.551 16.3199 14.9056L21.7071 20.2929C22.0976 20.6834 22.0976 21.3166 21.7071 21.7071C21.3166 22.0976 20.6834 22.0976 20.2929 21.7071L14.9056 16.3199C13.551 17.3729 11.8487 18 10 18C5.58172 18 2 14.4183 2 10Z"
+                    ></path>
+                </svg>
+            </span>
+            <input
+                class="placeholder:italic border-b border-transparent focus:outline-none focus:border-sky-500 px-3 pl-9 py-2 w-full h-full"
+                placeholder="Enter Url"
+                type="text"
+                name="url"
+                value={Astro.params.url}
+            />
+        </label>
+    </form>
+</div>
+
+<script is:inline>
+    function handleSubmit(event) {
+        event.preventDefault();
+        const url = event.target.url?.value;
+        if (url) {
+            window.location.href = `${origin}/${url}`;
+        }
+    }
+</script>
