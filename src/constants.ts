@@ -1,1 +1,1 @@
-export const SITE_TITLE = "RSS Reader";
+export const SITE_TITLE = "Reader";

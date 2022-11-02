@@ -1,0 +1,20 @@
+---
+import FeedItem from "../components/FeedItem.astro";
+import type { Feed } from "../env";
+
+export interface Props {
+    feed: Feed;
+}
+
+const {
+    feed: { items, lastBuildDate, title },
+} = Astro.props;
+---
+
+<p class="font-semibold">
+    Updated: {lastBuildDate && new Date(lastBuildDate).toLocaleString()}
+</p>
+<h1>{title}</h1>
+<article>
+    {items.map((item) => <FeedItem item={item} />)}
+</article>

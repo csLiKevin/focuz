@@ -1,0 +1,29 @@
+---
+import type { FeedItem } from "../env";
+
+export interface Props {
+    item: FeedItem;
+}
+
+const {
+    item: { author, content, link, pubDate, title },
+} = Astro.props;
+
+const formattedContent = content
+    ?.replaceAll(/<br ?\/>/gi, "")
+    .replaceAll(/<img/gi, "<img class='mx-auto'");
+---
+
+<section class="border-solid border-2 mb-8 px-8 rounded-lg shadow">
+    <h3>
+        <a href={link} target="_blank">
+            {title}
+            {link && <>&rarr;</>}
+        </a>
+    </h3>
+    <h4 class="mt-2">
+        {pubDate && new Date(pubDate).toLocaleString()}
+        {author && <>&#8226; {author}</>}
+    </h4>
+    <div set:html={formattedContent} />
+</section>

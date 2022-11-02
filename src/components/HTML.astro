@@ -1,0 +1,14 @@
+---
+import type { Readability } from "@mozilla/readability";
+
+export interface Props {
+    content: NonNullable<ReturnType<Readability["parse"]>>;
+}
+
+const {
+    content: { content, title },
+} = Astro.props;
+---
+
+<h1>{title}</h1>
+<article set:html={content} />

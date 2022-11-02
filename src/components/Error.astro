@@ -1,0 +1,18 @@
+---
+import { Code } from "astro/components";
+
+export interface Props {
+    error: Error;
+}
+
+const { error } = Astro.props;
+const code = [error.cause?.toString(), error.stack || error.toString()]
+    .filter(Boolean)
+    .join("\n");
+---
+
+<section>
+    <h3>Unavailable</h3>
+    <h4>Error loading url.</h4>
+    {import.meta.env.DEV && <Code lang="js" code={code} />}
+</section>
