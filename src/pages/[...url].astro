@@ -3,56 +3,10 @@ import Error from "../components/Error.astro";
 import HTML from "../components/HTML.astro";
 import XML from "../components/XML.astro";
 import { SITE_TITLE } from "../constants";
-import type { Feed } from "../env";
 import Layout from "../layouts/Layout.astro";
-import { Readability } from "@mozilla/readability";
-import { parseHTML } from "linkedom";
-import Parser from "rss-parser";
+import { getSourceURL, parse, ParseResults } from "../utils";
 
-function getSourceURL() {
-    const url = (Astro.params.url || "").toString();
-
-    if (url.indexOf(".") === -1) {
-        return null;
-    }
-
-    try {
-        return new URL(url);
-    } catch (_) {}
-
-    try {
-        return new URL(`${Astro.url.protocol}//${url}`);
-    } catch (_) {}
-
-    return null;
-}
-
-type ParseResults = { xml?: Feed; html?: ReturnType<Readability["parse"]> };
-async function parse(url: URL): Promise<ParseResults> {
-    const response = await fetch(url.toString());
-    const text = await response.text();
-    const isXML = Boolean(
-        response.headers.get("content-type")?.match(/(application|text)\/xml/gi)
-    );
-
-    if (isXML) {
-        const parser = new Parser<Feed>({
-            customFields: {
-                item: ["description", "media:thumbnail"],
-            },
-        });
-        return {
-            xml: await parser.parseString(text),
-        };
-    }
-
-    const { document } = parseHTML(text);
-    return {
-        html: new Readability(document).parse(),
-    };
-}
-
-const source = getSourceURL();
+const source = getSourceURL(Astro);
 let results: ParseResults | null = null;
 let error: Error | null = null;
 if (source) {
@@ -73,16 +27,18 @@ if (error) {
 <Layout title={SITE_TITLE}>
     <main>
         {error && <Error error={error} />}
-        {
-            source && (
-                <p class="font-semibold">
-                    Source:{" "}
-                    <a href={source} target="_blank">
-                        {source}
-                    </a>
-                </p>
-            )
-        }
+        <noscript>
+            {
+                source && (
+                    <p class="font-semibold">
+                        Source:{" "}
+                        <a href={source} target="_blank">
+                            {source}
+                        </a>
+                    </p>
+                )
+            }
+        </noscript>
         {results?.xml && <XML feed={results.xml} />}
         {results?.html && <HTML content={results.html} />}
     </main>
