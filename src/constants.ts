@@ -1,1 +1,1 @@
-export const SITE_TITLE = "Reader";
+export const SITE_TITLE = "Focuz";

@@ -1,6 +1,8 @@
-# RSS Reader
+# Focuz
 
-https://rss-reader-x.vercel.app/
+https://focuz.vercel.app/
+
+Show websites in focus mode.
 
 ## Commands
 
