@@ -23,7 +23,7 @@ export function getSourceURL(astro: APIContext | AstroGlobal) {
 }
 
 export function fixRelativeUrls(baseUrl: string, text: string) {
-    return text.replace(/(href|src)=('|")\//gi, `$1=$2/${baseUrl}/`);
+    return text.replace(/(action|href|src)=('|")\//gi, `$1=$2/${baseUrl}/`);
 }
 
 export function isTextContent(contentType: string | null) {
