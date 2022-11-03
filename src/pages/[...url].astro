@@ -12,6 +12,7 @@ let error: Error | null = null;
 if (source) {
     try {
         results = await parse(source);
+        Astro.response.headers.set("cache-control", "public, max-age=300");
     } catch (exception) {
         error = exception as Error;
     }

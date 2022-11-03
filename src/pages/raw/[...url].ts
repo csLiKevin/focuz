@@ -7,13 +7,17 @@ export const get: APIRoute = async function get(context: APIContext) {
         try {
             const response = await fetch(source);
             const contentType = response.headers.get("content-type") || "";
-            const headers = new Headers({ "content-type": contentType });
+            const headers = new Headers({
+                "content-type": contentType,
+                "cache-control": "public, max-age=300",
+            });
             if (isTextContent(contentType)) {
                 const text = await response.text();
                 return new Response(fixRelativeUrls(`raw/${source}`, text), {
                     headers,
                 });
             }
+            headers.set("cache-control", "public, max-age=604800");
             return new Response(response.body, { headers });
         } catch (exception) {}
     }
