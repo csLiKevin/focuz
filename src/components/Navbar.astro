@@ -1,4 +1,6 @@
 ---
+import { getSourceURL } from "../utils";
+
 export interface Props {
     title: string;
 }
@@ -37,7 +39,7 @@ const { origin } = Astro.url;
                 placeholder="Enter Url"
                 type="text"
                 name="url"
-                value={Astro.params.url}
+                value={getSourceURL(Astro)?.toString()}
             />
         </label>
     </form>
