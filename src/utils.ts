@@ -1,10 +1,10 @@
 import type { Feed } from "./env";
 import { Readability } from "@mozilla/readability";
-import type { AstroGlobal } from "astro";
+import type { APIContext, AstroGlobal } from "astro";
 import { parseHTML } from "linkedom";
 import Parser from "rss-parser";
 
-export function getSourceURL(astro: AstroGlobal) {
+export function getSourceURL(astro: APIContext | AstroGlobal) {
     const url = `${astro.params.url}${astro.url.search}`;
 
     if (url.indexOf(".") === -1) {
@@ -22,7 +22,7 @@ export function getSourceURL(astro: AstroGlobal) {
     return null;
 }
 
-function fixRelativeUrls(baseUrl: string, text: string) {
+export function fixRelativeUrls(baseUrl: string, text: string) {
     return text.replace(/(href|src)=('|")\//gi, `$1=$2/${baseUrl}/`);
 }
 
@@ -33,9 +33,7 @@ export type ParseResults = Readonly<{
 }>;
 export async function parse(url: URL): Promise<ParseResults> {
     const response = await fetch(url.toString());
-    const text = await response.text();
-    const modifiedText = fixRelativeUrls(url.origin, text);
-
+    const text = fixRelativeUrls(url.origin, await response.text());
     const isXML = Boolean(
         response.headers.get("content-type")?.match(/(application|text)\/xml/gi)
     );
@@ -47,11 +45,12 @@ export async function parse(url: URL): Promise<ParseResults> {
             },
         });
         return {
-            xml: await parser.parseString(modifiedText),
+            xml: await parser.parseString(text),
         };
     }
 
-    const { document } = parseHTML(modifiedText);
+    // TODO: Switch to JSDom to simulate a JS enabled browser.
+    const { document } = parseHTML(text);
     return {
         html: new Readability(document).parse(),
     };
