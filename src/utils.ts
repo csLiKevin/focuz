@@ -26,17 +26,33 @@ export function fixRelativeUrls(baseUrl: string, text: string) {
     return text.replace(/(href|src)=('|")\//gi, `$1=$2/${baseUrl}/`);
 }
 
+export function isTextContent(contentType: string | null) {
+    return contentType?.includes("text");
+}
+
+function isStaticUrl(url: URL) {
+    return Boolean(url.toString().match(/.(css|gif|jpe?g|js|png)$/i));
+}
+
 export type ParseResults = Readonly<{
     html?: ReturnType<Readability["parse"]>;
     raw?: string;
     xml?: Feed;
 }>;
 export async function parse(url: URL): Promise<ParseResults> {
+    if (isStaticUrl(url)) {
+        return {};
+    }
+
     const response = await fetch(url.toString());
+    const contentType = response.headers.get("content-type");
+
+    if (!isTextContent(contentType)) {
+        return {};
+    }
+
     const text = fixRelativeUrls(url.origin, await response.text());
-    const isXML = Boolean(
-        response.headers.get("content-type")?.match(/(application|text)\/xml/gi)
-    );
+    const isXML = Boolean(contentType?.match(/(application|text)\/xml/gi));
 
     if (isXML) {
         const parser = new Parser<Feed>({
