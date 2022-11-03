@@ -13,7 +13,7 @@ export const get: APIRoute = async function get(context: APIContext) {
             });
             if (isTextContent(contentType)) {
                 const text = await response.text();
-                return new Response(fixRelativeUrls(`raw/${source}`, text), {
+                return new Response(fixRelativeUrls(`raw/${source.origin}`, text), {
                     headers,
                 });
             }
