@@ -26,21 +26,19 @@ if (error) {
 ---
 
 <Layout title={SITE_TITLE}>
-    <main>
-        {error && <Error error={error} />}
-        <noscript>
-            {
-                source && (
-                    <p class="font-semibold">
-                        Source:{" "}
-                        <a href={source} target="_blank">
-                            {source}
-                        </a>
-                    </p>
-                )
-            }
-        </noscript>
-        {results?.xml && <XML feed={results.xml} />}
-        {results?.html && <HTML content={results.html} />}
-    </main>
+    {error && <Error error={error} />}
+    <noscript>
+        {
+            source && (
+                <p class="font-semibold">
+                    Source:{" "}
+                    <a href={source} target="_blank">
+                        {source}
+                    </a>
+                </p>
+            )
+        }
+    </noscript>
+    {results?.xml && <XML feed={results.xml} />}
+    {results?.html && <HTML content={results.html} />}
 </Layout>
