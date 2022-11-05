@@ -22,12 +22,12 @@ export function getSourceURL(astro: APIContext | AstroGlobal) {
     return null;
 }
 
-export function fixRelativeUrls(baseUrl: string, text: string) {
+export function replaceRelativeUrls(baseUrl: string, text: string) {
     return text.replace(/(action|href|src)=('|")\//gi, `$1=$2/${baseUrl}/`);
 }
 
 export function isTextContent(contentType: string | null) {
-    return contentType?.includes("text");
+    return contentType?.includes("text") || contentType?.includes("xml");
 }
 
 function isStaticUrl(url: URL) {
@@ -51,8 +51,8 @@ export async function parse(url: URL): Promise<ParseResults> {
         return {};
     }
 
-    const text = fixRelativeUrls(url.origin, await response.text());
-    const isXML = Boolean(contentType?.match(/(application|text)\/xml/gi));
+    const text = replaceRelativeUrls(url.origin, await response.text());
+    const isXML = contentType?.includes("xml");
 
     if (isXML) {
         const parser = new Parser<Feed>({

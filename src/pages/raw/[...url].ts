@@ -1,4 +1,4 @@
-import { fixRelativeUrls, getSourceURL, isTextContent } from "../../utils";
+import { replaceRelativeUrls, getSourceURL, isTextContent } from "../../utils";
 import type { APIContext, APIRoute } from "astro";
 
 export const get: APIRoute = async function get(context: APIContext) {
@@ -13,7 +13,7 @@ export const get: APIRoute = async function get(context: APIContext) {
             });
             if (isTextContent(contentType)) {
                 const text = await response.text();
-                return new Response(fixRelativeUrls(`raw/${source.origin}`, text), {
+                return new Response(replaceRelativeUrls(`raw/${source.origin}`, text), {
                     headers,
                 });
             }
