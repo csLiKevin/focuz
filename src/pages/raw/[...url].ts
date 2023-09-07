@@ -13,9 +13,12 @@ export const get: APIRoute = async function get(context: APIContext) {
             });
             if (isTextContent(contentType)) {
                 const text = await response.text();
-                return new Response(replaceRelativeUrls(`raw/${source.origin}`, text), {
-                    headers,
-                });
+                return new Response(
+                    replaceRelativeUrls(`raw/${source.origin}`, text),
+                    {
+                        headers,
+                    },
+                );
             }
             headers.set("cache-control", "public, max-age=604800");
             return new Response(response.body, { headers });

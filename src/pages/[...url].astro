@@ -4,7 +4,7 @@ import HTML from "../components/HTML.astro";
 import XML from "../components/XML.astro";
 import { SITE_TITLE } from "../constants";
 import Layout from "../layouts/Layout.astro";
-import { getSourceURL, parse, ParseResults } from "../utils";
+import { getSourceURL, parse, type ParseResults } from "../utils";
 
 const source = getSourceURL(Astro);
 let results: ParseResults | null = null;

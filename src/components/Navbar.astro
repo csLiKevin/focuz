@@ -16,8 +16,8 @@ const { origin } = Astro.url;
         <a href="/" class="no-underline text-black font-extrabold">{title}</a>
     </h1>
     <form
-        onsubmit="handleSubmit(event)"
         class="javascript-required flex-1 mt-1"
+        name="url_input"
     >
         <label class="relative block">
             <span class="sr-only">Enter Url</span>
@@ -53,4 +53,6 @@ const { origin } = Astro.url;
             window.location.href = `${origin}/${url}`;
         }
     }
+
+    document.forms["url_input"].addEventListener("submit", handleSubmit);
 </script>

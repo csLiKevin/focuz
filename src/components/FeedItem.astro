@@ -18,12 +18,12 @@ const formattedContent = content
     <h3>
         <a href={link} target="_blank">
             {title}
-            {link && <>&rarr;</>}
+            {link && <> &rarr;</>}
         </a>
     </h3>
     <h4 class="mt-2">
         {pubDate && new Date(pubDate).toLocaleString()}
-        {author && <>&#8226; {author}</>}
+        {author && <> &#8226; {author}</>}
     </h4>
     <div set:html={formattedContent} />
 </section>
