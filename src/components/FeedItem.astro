@@ -5,13 +5,25 @@ export interface Props {
     item: FeedItem;
 }
 
-const {
-    item: { author, content, link, pubDate, title },
-} = Astro.props;
+const { author, "content:encoded": contentEncoded, contentSnippet, link, "media:thumbnail": mediaThumbnail, pubDate, title } = Astro.props.item;
+let { content = "" } = Astro.props.item;
+let truncated = false;
+
+// If content and content snippet are the same, display the encoded content instead.
+if (contentSnippet?.length === content.length && contentEncoded?.length) {
+    content = contentEncoded;
+}
+
+if (content.length > 512) {
+    content = `${content?.slice(0, 512)} &hellip;`;
+    truncated = true;
+}
 
 const formattedContent = content
     ?.replaceAll(/<br ?\/>/gi, "")
     .replaceAll(/<img/gi, "<img class='mx-auto'");
+
+const thumbnail = mediaThumbnail?.$.url;
 ---
 
 <section class="border-solid border-2 mb-8 px-8 rounded-lg shadow">
@@ -25,5 +37,14 @@ const formattedContent = content
         {pubDate && new Date(pubDate).toLocaleString()}
         {author && <> &#8226; {author}</>}
     </h4>
-    <div set:html={formattedContent} />
+    {thumbnail && <img class="mx-auto" src={thumbnail} />}
+    <div class="mb-4">
+        <span set:html={formattedContent}/>
+        {
+            truncated && link &&
+            <a class="ml-2" href={link} target="_blank">
+                {link && <>&rarr;</>}
+            </a>
+        }
+    </div>
 </section>
